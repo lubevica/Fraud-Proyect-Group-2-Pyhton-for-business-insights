@@ -130,7 +130,14 @@ Se utilizó XGBoost y se hizo uso de Gridsearch para utilizar los mejores parám
 ![image](https://github.com/user-attachments/assets/6ba53618-22f0-4796-949f-eda7f86a5337)
 
 # Explicabilidad
-*notas graficas de shapes explicabilidad*
+Utilizamos SHAP para interpretar el modelo y verificar que las decisiones fueran coherentes:
+    Variables más importantes:
+        bin__Fault (culpa en el accidente) fue el factor más determinante.
+        cat__BasePolicy_Liability (tipo de póliza) también tuvo gran influencia.
+
+    Análisis específico:
+        Ejemplos con predicción de no fraude mostraron que un fuerte peso negativo en bin__Fault contrarrestaba otros factores de riesgo.
+        El modelo no actúa como una caja negra: las predicciones tienen sentido de negocio y son interpretables, aumentando la confianza para su uso en producción.
 ![image](https://github.com/user-attachments/assets/d08af5ed-c06d-404a-8445-24b88f60e64a)
 
 ![image](https://github.com/user-attachments/assets/15913db5-8451-4736-9dea-2a0c808411a2)
@@ -142,19 +149,52 @@ Para mejorar el modelo, se crearon dos nuevas variables: ClienteMuyRiesgoso y Pe
 
 
 # Resultados
-*notas rendimiento del modelo*
+Tras ajustar el umbral de decisión para maximizar el F1-score, el modelo obtuvo:
+
+    Recall en fraude: 61%
+    → Se cumplió el objetivo de minimizar el fraude no detectado.
+
+    Precision en fraude: 20%
+    → Aunque baja, es aceptable considerando que se priorizó Recall.
+
+    F1-Score en fraude: 30%
+    → Mejor balance entre precisión y recall respecto a versiones anteriores.
+
+    Accuracy general: 83%
+    → Refleja un rendimiento global fuerte, adecuado para producción.
+En conclusión se logró un equilibrio favorable entre capturar fraudes y minimizar falsos positivos, mejorando la eficiencia operativa.
 ![image](https://github.com/user-attachments/assets/878b669a-8c28-4872-a111-ce8d96a22171)
 ![image](https://github.com/user-attachments/assets/6d8aed76-0217-4d83-b1c9-d7d2f233135c)
 ![image](https://github.com/user-attachments/assets/111e873e-4172-4d40-ba90-34b0cb312494)
 
-*notas de matriz de confusion*
+Impacto económico traducido:
+
+    Fraudes no detectados (40 casos): $400,000 en pérdidas.
+    Investigaciones innecesarias (310 casos): $310,000 en costos operativos.
+    Costo total asociado: $710,000
+
 ![image](https://github.com/user-attachments/assets/e46cc328-84c1-46f2-b47a-763ce045b1b4)
-*notas de matriz de confusion sobre costos KPI*
+Beneficio estratégico:
+
+    Sin el modelo, habrían investigado 1450 reclamos manualmente.
+    Con Machine Learning, solo investigan 310 reclamos sospechosos.
+    Ahorro operativo estimado: más del 75%.
 ![image](https://github.com/user-attachments/assets/d8431ad0-6ecb-42af-a03f-e3a3f8cfa636)
 ![image](https://github.com/user-attachments/assets/61d1f642-8f6d-4c5e-9730-40454ba598d8)
 
 # Implementación 
-*notas implementacion*
+Flujo de aplicación:
+
+    Ingreso de reclamo:
+        Cliente presenta solicitud (accidente, robo, etc.)
+    Predicción automática:
+        El modelo evalúa en tiempo real la probabilidad de fraude.
+    Clasificación:
+        Alta probabilidad → investigación humana.
+        Baja probabilidad → procesamiento automático normal.
+    Acción de negocio:
+        Casos riesgosos se auditan.
+        Casos legítimos se procesan más rápido.
 ![image](https://github.com/user-attachments/assets/2fbf58d5-ec28-4ba0-8ebe-92c65b8744b1)
 ![image](https://github.com/user-attachments/assets/6346c9ab-c98d-4949-be6b-10949a50bd4e)
 
